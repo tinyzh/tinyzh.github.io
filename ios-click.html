@@ -9,18 +9,16 @@
 	</style>
 </head>
 <body>
-	<div id="btn">click</div>
-	<a href="javascript:;" id="fix">add cursor pointer</a>
+	<div id="btn1">click without pointer</div>
+	<div id="btn2">click with pointer</div>
 	<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
 	<script>
-		$('#btn').on('click',function(){
-			alert('ok');
+		$('#btn1').on('click',function(){
+			alert('btn1');
 		});
-
-		$('#fix').on('click',function(){
-
-			$('#btn').css('cursor','pointer');
-		})
+		$('#btn2').on('click',function(){
+			alert('btn2');
+		});
 
 
 	</script>
