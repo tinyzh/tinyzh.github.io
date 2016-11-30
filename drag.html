@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{margin: 0;padding: 0;}
+		#box{padding: 5px;border:1px solid #ccc;display: inline-block;cursor:move; }
+		#rubi{width: 100px;height: 100px;border:1px solid #ddd;margin-top: 100px;}
+	</style>
+</head>
+<body>
+	<div draggable="true" id="box">可以拖动</div>
+	<div id="rubi"></div>
+
+	<script>
+		var box = document.getElementById('box');
+		var rubi = document.getElementById('rubi');
+		var targetEle = null;
+
+		box.ondragstart = function(e){
+			targetEle = this;
+		};
+		box.ondragend = function(e){
+			return false;
+		};
+
+		rubi.ondragover = function(e){
+			e.preventDefault();
+			return true;
+		};
+
+		rubi.ondragenter = function(e){
+			this.style.border = '1px solid #000';
+			return true;
+		};
+
+		rubi.ondrop = function(e){
+			box.parentNode.removeChild(targetEle);
+			this.innerHTML += targetEle.outerHTML;
+			console.log('success');
+			this.style.border = '1px solid #ddd';
+			return false;
+		}	
+
+	</script>
+</body>
+</html>
