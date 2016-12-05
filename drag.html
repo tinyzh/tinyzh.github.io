@@ -29,6 +29,9 @@
 			e.preventDefault();
 			return true;
 		};
+		rubi.ondragleave = function(e){
+			this.style.border = '1px solid #ddd';
+		}
 
 		rubi.ondragenter = function(e){
 			this.style.border = '1px solid #000';
