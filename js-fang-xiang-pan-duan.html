@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style media="screen">
+        * {padding: 0;margin: 0;}
+        ul {list-style: none; position: relative;font-size: 0;width: 600px;margin: 50px auto 0;}
+        ul > li {position: relative;width: 300px;height: 300px;background-color: rgb(213,213,213);display: inline-block;margin: 10px;overflow: hidden;}
+        ul > li .bg {position: absolute;width: 300px;height: 300px;left: -100%;top: 0;background-color: rgb(212,23,222);text-align: center;line-height: 300px;cursor: pointer;color: #fff;font-size: 20px;}
+        .line{position: absolute;width: 50%;height: 1px;background: red;right: 0;top: 50%;transition: all .3s;transform-origin:left; }
+        .res{text-align: center;}
+    </style>
+</head>
+<body>
+<ul>
+        <li>
+            <div class="bg">
+                js
+            </div>
+        </li>
+
+    </ul>
+    <div class="res"></div>
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+
+    	$("li").on("mouseenter mouseleave",function(e) {
+           var w = this.offsetWidth;  //获取元素宽度
+           var h = this.offsetHeight; //获取元素高度
+           var x = e.pageX - this.getBoundingClientRect().left - w/2;   //获取当前鼠标的x轴位置（相对于这个li的中心点）
+           var y = e.pageY - this.getBoundingClientRect().top - h/2;	////获取当前鼠标的y轴位置（相对于这个li的中心点）
+           //getBoundingClientRect() 会返回元素的大小和相对于视口的位置   但是这个值是不包含滚动距离的
+           
+           
+           var direction = Math.round((((Math.atan2(y, x) * 180 / Math.PI) + 180) / 90) + 3) % 4; //direction的值为“0,1,2,3”分别对应着“上，右，下，左”
+           var eventType = e.type;
+           var res = Math.atan2(y, x) / (Math.PI / 180) + 180 ;
+           $('.line').css('transform','rotate('+ res +'deg)');
+           
+           // console.log(((Math.atan2(y, x) * 180 / Math.PI) + 180));
+           // console.log(Math.round((Math.atan2(y, x) / (Math.PI / 180) + 180) / 90 + 3) % 4);
+           var dirName = new Array('上方','右侧','下方','左侧');
+           
+           
+           if(eventType == 'mouseenter'){
+              $('.res').text(dirName[direction]+'进入');
+              animationIn(direction);
+          }else{
+              $('.res').text(dirName[direction]+'离开');
+              animationOut(direction);
+          }
+      });
+    	var $bg = $('.bg');
+
+    	function animationIn(direction){
+    		
+    		switch(direction){
+    			case 0:
+    				$bg.css({
+    					left : 0,
+    					top : '-100%'
+    				}).animate({
+    					top : 0
+    				},300);
+    				break;
+    			case 1:
+    				$bg.css({
+    					left : '100%',
+    					top : 0
+    				}).animate({
+    					left : 0
+    				},300);
+    				break;
+    			case 2:
+    				$bg.css({
+    					left : 0,
+    					top : '100%'
+    				}).animate({
+    					top : 0
+    				},300);
+    				break;
+    			case 3:
+    				$bg.css({
+    					left : '-100%',
+    					top : 0
+    				}).animate({
+    					left : 0
+    				},300);
+    				break;
+    		}
+    	}
+
+    	function animationOut(direction){
+    			switch(direction){
+    				case 0:
+    				$bg.animate({
+    					top : '-100%'
+    				},300);
+    				break;
+    			case 1:
+    				$bg.animate({
+    					left : '100%'
+    				},300);
+    				break;
+    			case 2:
+    				$bg.animate({
+    					top : '100%'
+    				},300);
+    				break;
+    			case 3:
+    				$bg.animate({
+    					left : '-100%'
+    				},300);
+    				break;
+    			}
+    			
+    		}
+    	
+
+    </script>
+	
+</body>
+</html>
