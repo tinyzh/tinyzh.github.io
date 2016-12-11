@@ -11,6 +11,7 @@
         ul > li .bg {position: absolute;width: 300px;height: 300px;left: -100%;top: 0;background-color: rgb(212,23,222);text-align: center;line-height: 300px;cursor: pointer;color: #fff;font-size: 20px;}
         .line{position: absolute;width: 50%;height: 1px;background: red;right: 0;top: 50%;transition: all .3s;transform-origin:left; }
         .res{text-align: center;}
+		.ul > li.fix{width:200px;height:300px;}
     </style>
 </head>
 <body>
@@ -20,7 +21,7 @@
                 js
             </div>
         </li>
-        <li>
+        <li class="fix">
             <div class="bg">
                 js
             </div>
@@ -41,8 +42,8 @@
            var w = this.offsetWidth;  //获取元素宽度
            var h = this.offsetHeight; //获取元素高度
            var toTop = this.getBoundingClientRect().top + document.body.scrollTop;  //兼容滚动条
-           var x = e.pageX - this.getBoundingClientRect().left - w/2;   //获取当前鼠标的x轴位置（相对于这个li的中心点）
-           var y = e.pageY - toTop - h/2;	////获取当前鼠标的y轴位置（相对于这个li的中心点）
+           var x = (e.pageX - this.getBoundingClientRect().left - (w / 2)) * (w > h ? (h / w) : 1);   //获取当前鼠标的x轴位置（相对于这个li的中心点）
+           var y = (e.pageY - toTop - h/2) * (h > w ? (w / h) : 1);
            
            var direction = Math.round((((Math.atan2(y, x) * 180 / Math.PI) + 180) / 90) + 3) % 4; //direction的值为“0,1,2,3”分别对应着“上，右，下，左”
            var eventType = e.type;
