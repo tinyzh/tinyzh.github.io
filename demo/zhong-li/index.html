@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+	<title>检测重力感应</title>
+	<style>
+		*{padding: 0;margin: 0;}
+		div{overflow:hidden;position: relative;width: 600px;height: 300px;left: -50px;top: -20px;}
+		img{background-size: 100% auto;}
+	</style>
+</head>
+<body>
+	<div>
+		<img src="demo.jpg" class="demo" width="100%">
+	</div>
+	<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+	<script src="orienter.js"></script>
+	<script>
+		// window.addEventListener('deviceorientation',function(e){
+		// 	var alpha = e.alpha;
+		// 	var beta = e.beta;
+		// 	var gamma = e.gamma;
+		// 	console.log(alpha,beta,gamma);
+		// },true)
+		// 
+
+		var ori = new Orienter();
+		ori.onOrient = function(obj){
+			var a,b;
+
+			a = obj.lon < 180 ? obj.lon : obj.lon - 360;
+			b = obj.lat;
+
+			a = a > 0 ? a > 49 ? 49 : a : a < -49 ? -49 : a;
+			b = b > 0 ? b > 20 ? 20 : b : b < -20 ? -20 : b;
+
+			$('.demo').css("transform","translate3d("+ a +"px,"+b+"px,0)");
+
+
+		}
+
+		ori.init();
+	</script>
+</body>
+</html>
