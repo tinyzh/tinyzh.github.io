@@ -32,7 +32,7 @@
 			a = a > 0 ? a > left ? left : a : a < '-' + left ? '-' + left : a;
 			b = b > 0 ? b > 20 ? 20 : b : b < -20 ? -20 : b;
 
-			$('.demo').css("transform","translate3d("+ a +"px,"+b+"px,0)");
+			$('.demo').css("-webkit-transform","translate3d("+ a +"px,"+b+"px,0)");
 
 
 		}
