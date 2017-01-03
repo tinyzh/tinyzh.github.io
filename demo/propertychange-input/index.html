@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+<input type="text" placeholder="点我试试" id="inp">
+<div></div>
+	<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+	<script>
+		var dom = document.getElementById('inp');
+		var ie = !!window.ActiveXObject;
+		if(ie){
+			dom.onpropertychange = function(e){
+				fn(this.value);
+			}
+		}else{
+			dom.addEventListener('input',function(){
+				fn(this.value);
+			})
+		}
+
+		function fn(num){
+			console.log(num)
+		}
+	</script>
+</body>
+</html>
