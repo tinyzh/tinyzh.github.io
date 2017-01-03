@@ -3,6 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+	<style>
+		div{border:1px solid #ccc;padding: 5px;}
+	</style>
 </head>
 <body>
 <input type="text" placeholder="点我试试" id="inp">
@@ -22,7 +25,7 @@
 		}
 
 		function fn(num){
-			console.log(num)
+			$('div').html(num);
 		}
 	</script>
 </body>
