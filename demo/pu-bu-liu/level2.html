@@ -6,8 +6,9 @@
 	<style>
 		*{margin: 0;padding: 0;}
 		.waterfall{margin: 10px auto;position: relative;}
-		.waterfall .flow{background: #000;position: absolute;border:1px solid #ccc;box-shadow: #ccc 2px 3px 3px;-webkit-transition:all 3s;}
-		.flowItem{width:100%;font-size:42px;color: #fff;text-align: center;}
+		.waterfall .flow{background: #000;position: absolute;border:1px solid #ccc;box-shadow: #ccc 2px 3px 3px;-webkit-transition:all 3s;font-size:42px;color: #fff;text-align: center;}
+		.flowItem{width:100%;}
+		#add{position: fixed;left:0;bottom:40px;}
 	</style>
 </head>
 <body>
@@ -29,6 +30,8 @@
 		    <div class="flow"><div class="flowItem" style="height: 120px;">15</div></div>
 		    <div class="flow"><div class="flowItem" style="height: 105px;">16</div></div>
 		</div>
+
+		<button id="add">add</button>
 
 		<script>
 
@@ -65,13 +68,25 @@
 				this.parent.style.width = this.pin * this.width + (this.pin - 1) * this.horizontalMargin + 'px';
 			}
 			Waterfall.prototype.update = function(data){
-				var _html = '';
-				for(var i = 0; i < data.list.length; i++){
-					_html += '<div class="flow"><div class="flowItem" style="height:'+data.list[i]+'px;">'+i+'</div></div>';
+				var docFragment = document.createDocumentFragment();
+				for(var i = 0, len = data.list.length; i < len; i++){
+					var div = document.createElement('div');
+					div.style.width = this.width + 'px';//每个元素的宽度
+					div.style.height = data.list[i] + 'px';//新增元素的高度
+					div.innerHTML = 'new' + i;
+					div.className = 'flow';
+
+					var minH = Math.min.apply(null,this.columnList);//取出高度最小列
+					var minHIndex = this.columnList.indexOf(minH);//然后找到索引值
+
+					div.style.left = minHIndex * (this.width + this.horizontalMargin) + 'px';
+					div.style.top = minH + this.verticalMargin + 'px';
+					this.columnList[minHIndex] += data.list[i] + this.verticalMargin;//计算完后 要更新每列的高度
+					docFragment.appendChild(div);
 				}
-				console.log(this.parent);
-				this.parent.innerHTML += _html;
-				this.init();
+				
+				waterfallParent.appendChild(docFragment);
+
 			}
 
 			Waterfall.prototype.init = function(){
@@ -90,14 +105,15 @@
 			};
 			var water = new Waterfall(cuttentFlow);
 			water.init();
-			// water.update(updateData);
 
-			var updateData = {
-				list : [222,555,666]
-				
+			var data = {
+				list : [120,260,452,120]
 			};
 
-			// update方法还没完善
+			document.getElementById('add').onclick = function(){
+				water.update(data);
+			}
+
 
 		</script>
 </body>
