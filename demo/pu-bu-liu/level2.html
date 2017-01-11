@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>瀑布流demo</title>
+	<style>
+		*{margin: 0;padding: 0;}
+		.waterfall{margin: 10px auto;position: relative;}
+		.waterfall .flow{background: #000;position: absolute;border:1px solid #ccc;box-shadow: #ccc 2px 3px 3px;-webkit-transition:all 3s;}
+		.flowItem{width:100%;font-size:42px;color: #fff;text-align: center;}
+	</style>
+</head>
+<body>
+		<div class="waterfall" id="waterfall">
+		    <div class="flow"><div class="flowItem" style="height: 100px;">1</div></div>
+		    <div class="flow"><div class="flowItem" style="height: 200px;">2</div></div>
+		    <div class="flow"><div class="flowItem" style="height: 150px;">3</div></div>
+		    <div class="flow"><div class="flowItem" style="height: 400px;">4</div></div>
+		    <div class="flow"><div class="flowItem" style="height: 180px;">5</div></div>
+		    <div class="flow"><div class="flowItem" style="height: 120px;">6</div></div>
+		    <div class="flow"><div class="flowItem" style="height: 300px;">7</div></div>
+		    <div class="flow"><div class="flowItem" style="height: 100px;">8</div></div>
+		    <div class="flow"><div class="flowItem" style="height: 120px;">9</div></div>
+		    <div class="flow"><div class="flowItem" style="height: 105px;">10</div></div>
+		    <div class="flow"><div class="flowItem" style="height: 180px;">11</div></div>
+		    <div class="flow"><div class="flowItem" style="height: 120px;">12</div></div>
+		    <div class="flow"><div class="flowItem" style="height: 300px;">13</div></div>
+		    <div class="flow"><div class="flowItem" style="height: 100px;">14</div></div>
+		    <div class="flow"><div class="flowItem" style="height: 120px;">15</div></div>
+		    <div class="flow"><div class="flowItem" style="height: 105px;">16</div></div>
+		</div>
+
+		<script>
+
+			function Waterfall(opt){
+				this.parent = opt.parent;
+				this.flowItems = opt.flowItems,
+				this.pin = opt.pin;
+				this.width = opt.width || 400;
+				this.horizontalMargin = opt.horizontalMargin || 15;
+				this.verticalMargin = opt.verticalMargin || 15;
+				this.columnList = new Array(this.pin);
+			}
+			Waterfall.prototype.calculate = function(){
+				for(var i = 0, pinLen = this.columnList.length; i < pinLen; i++){
+					//计算每一列高度的初始值
+					this.columnList[i] = this.flowItems[i].offsetTop + this.flowItems[i].offsetHeight;
+				}
+
+				for(var i = 0, len = this.flowItems.length; i < len; i++){
+				
+					this.flowItems[i].style.width = this.width + 'px';
+					
+
+					if(i >= this.pin){
+						var minH = Math.min.apply(null,this.columnList);
+						var minHIndex = this.columnList.indexOf(minH);
+						this.flowItems[i].style.left = minHIndex * (this.width + this.horizontalMargin) + 'px';
+						this.flowItems[i].style.top = minH + this.verticalMargin + 'px';
+						this.columnList[minHIndex] += this.flowItems[i].offsetHeight + this.verticalMargin;
+					}else if(i < this.pin){
+						this.flowItems[i].style.top = 0;
+						this.flowItems[i].style.left = (i % this.pin) * (this.width + this.horizontalMargin) + 'px';
+					}
+				}
+
+				this.parent.style.width = this.pin * this.width + (this.pin - 1) * this.horizontalMargin + 'px';
+			}
+			Waterfall.prototype.init = function(){
+				this.calculate();
+			}
+
+			var waterfallParent = document.getElementById('waterfall');
+			var flowItems = waterfall.querySelectorAll('.flow');
+			var cuttentFlow = {
+				parent : waterfallParent,//父容器
+				flowItems : flowItems,//子元素集合
+				pin : 4,//列数
+				width : 400,//每个元素宽度
+				horizontalMargin : 15,//元素水平距离
+				verticalMargin : 15//元素垂直距离
+			};
+			var water = new Waterfall(cuttentFlow);
+			water.init();
+
+		</script>
+</body>
+</html>
