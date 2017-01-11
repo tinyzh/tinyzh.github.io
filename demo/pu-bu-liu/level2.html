@@ -53,11 +53,11 @@
 					
 
 					if(i >= this.pin){
-						var minH = Math.min.apply(null,this.columnList);
-						var minHIndex = this.columnList.indexOf(minH);
+						var minH = Math.min.apply(null,this.columnList);//取出高度最小列
+						var minHIndex = this.columnList.indexOf(minH);//然后找到索引值
 						this.flowItems[i].style.left = minHIndex * (this.width + this.horizontalMargin) + 'px';
 						this.flowItems[i].style.top = minH + this.verticalMargin + 'px';
-						this.columnList[minHIndex] += this.flowItems[i].offsetHeight + this.verticalMargin;
+						this.columnList[minHIndex] += this.flowItems[i].offsetHeight + this.verticalMargin;//计算完后 要更新每列的高度
 					}else if(i < this.pin){
 						this.flowItems[i].style.top = 0;
 						this.flowItems[i].style.left = (i % this.pin) * (this.width + this.horizontalMargin) + 'px';
