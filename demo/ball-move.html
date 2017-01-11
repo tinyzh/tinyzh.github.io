@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{margin: 0;padding: 0;}
+		div{position: absolute;background:blue;width: 20px;height: 20px;border-radius: 50%;}
+		#move{margin-top: 40px;}
+	</style>
+</head>
+<body>
+	<div id="dom" ></div>
+	<button id="move">move</button>			
+	<script>
+
+		var tween = {
+			linear : function(t,b,c,d){
+				return c*t/d + b;
+			},
+			easeIn : function(t,b,c,d){
+				return c * (t /= d) * t + b;
+			}
+		};
+
+		var Animate = function(dom){
+			this.dom = dom;
+			this.startTime = 0;
+			this.startPos = 0;
+			this.endPos = 0;
+			this.propertyName = null;
+			this.easing = null;
+			this.duration = null;
+		};
+
+		Animate.prototype.start = function(propertyName,endPos,duration,easing){
+			this.startTime = +new Date;
+			this.startPos = this.dom.getBoundingClientRect()[propertyName];
+			this.propertyName = propertyName;
+			this.endPos = endPos;
+			this.duration = duration;
+			this.easing = tween[easing];
+
+			var self = this;
+			var timeId = setInterval(function(){
+				if(self.step() === false){
+					clearInterval(timeId);
+				}
+			},19);
+		};
+
+		Animate.prototype.step = function(){
+			var t = +new Date;
+			if(t >= this.startTime + this.duration){
+				this.update(this.endPos);
+				return false;
+			}
+			var pos = this.easing(t - this.startTime, this.startPos, this.endPos - this.startPos, this.duration);
+			this.update(pos);
+		};
+
+		Animate.prototype.update = function(pos){
+			this.dom.style[this.propertyName] = pos + 'px';
+
+		};
+
+		var div = document.getElementById('dom');
+		var animate = new Animate(div);
+
+		document.getElementById('move').onclick = function(){
+			animate.start('left',500,3000,'easeIn');
+		}
+
+
+
+
+
+
+
+
+	</script>
+</body>
+</html>
