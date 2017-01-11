@@ -39,7 +39,7 @@
 				this.width = opt.width || 400;
 				this.horizontalMargin = opt.horizontalMargin || 15;
 				this.verticalMargin = opt.verticalMargin || 15;
-				this.columnList = new Array(this.pin);
+				this.columnList = new Array(this.pin);//列高度 容器
 			}
 			Waterfall.prototype.calculate = function(){
 				for(var i = 0, pinLen = this.columnList.length; i < pinLen; i++){
@@ -48,10 +48,8 @@
 				}
 
 				for(var i = 0, len = this.flowItems.length; i < len; i++){
-				
-					this.flowItems[i].style.width = this.width + 'px';
 					
-
+					this.flowItems[i].style.width = this.width + 'px';//每个元素的宽度
 					if(i >= this.pin){
 						var minH = Math.min.apply(null,this.columnList);//取出高度最小列
 						var minHIndex = this.columnList.indexOf(minH);//然后找到索引值
@@ -66,6 +64,16 @@
 
 				this.parent.style.width = this.pin * this.width + (this.pin - 1) * this.horizontalMargin + 'px';
 			}
+			Waterfall.prototype.update = function(data){
+				var _html = '';
+				for(var i = 0; i < data.list.length; i++){
+					_html += '<div class="flow"><div class="flowItem" style="height:'+data.list[i]+'px;">'+i+'</div></div>';
+				}
+				console.log(this.parent);
+				this.parent.innerHTML += _html;
+				this.init();
+			}
+
 			Waterfall.prototype.init = function(){
 				this.calculate();
 			}
@@ -82,6 +90,14 @@
 			};
 			var water = new Waterfall(cuttentFlow);
 			water.init();
+			// water.update(updateData);
+
+			var updateData = {
+				list : [222,555,666]
+				
+			};
+
+			// update方法还没完善
 
 		</script>
 </body>
