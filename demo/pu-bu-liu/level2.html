@@ -6,7 +6,7 @@
 	<style>
 		*{margin: 0;padding: 0;}
 		.waterfall{margin: 10px auto;position: relative;}
-		.waterfall .flow{background: #000;position: absolute;border:1px solid #ccc;box-shadow: #ccc 2px 3px 3px;-webkit-transition:all 3s;font-size:42px;color: #fff;text-align: center;}
+		.waterfall .flow{background: #000;position: absolute;border:1px solid #ccc;box-shadow: #ccc 2px 3px 3px;font-size:42px;color: #fff;text-align: center;}
 		.flowItem{width:100%;}
 		#add{position: fixed;left:0;bottom:40px;}
 	</style>
@@ -36,13 +36,13 @@
 		<script>
 
 			function Waterfall(opt){
-				this.parent = opt.parent;
-				this.flowItems = opt.flowItems,
-				this.pin = opt.pin;
-				this.width = opt.width || 400;
-				this.horizontalMargin = opt.horizontalMargin || 15;
-				this.verticalMargin = opt.verticalMargin || 15;
-				this.columnList = new Array(this.pin);//列高度 容器
+				this.parent = opt.parent;//父容器
+				this.flowItems = opt.flowItems,//元素列表
+				this.pin = opt.pin;// 总列数
+				this.width = opt.width || 400; // 元素的宽度
+				this.horizontalMargin = opt.horizontalMargin || 15; // 元素的水平间距
+				this.verticalMargin = opt.verticalMargin || 15; // 元素的垂直间距
+				this.columnList = new Array(this.pin);// 列高度存储的容器
 			}
 			Waterfall.prototype.calculate = function(){
 				for(var i = 0, pinLen = this.columnList.length; i < pinLen; i++){
@@ -60,6 +60,7 @@
 						this.flowItems[i].style.top = minH + this.verticalMargin + 'px';
 						this.columnList[minHIndex] += this.flowItems[i].offsetHeight + this.verticalMargin;//计算完后 要更新每列的高度
 					}else if(i < this.pin){
+						// 这里设置第一行的元素（第一行距离容器顶部为0）
 						this.flowItems[i].style.top = 0;
 						this.flowItems[i].style.left = (i % this.pin) * (this.width + this.horizontalMargin) + 'px';
 					}
@@ -67,7 +68,7 @@
 
 				this.parent.style.width = this.pin * this.width + (this.pin - 1) * this.horizontalMargin + 'px';
 			}
-			Waterfall.prototype.update = function(data){
+			Waterfall.prototype.update = function(data){// 更新数据
 				var docFragment = document.createDocumentFragment();
 				for(var i = 0, len = data.list.length; i < len; i++){
 					var div = document.createElement('div');
@@ -95,6 +96,7 @@
 
 			var waterfallParent = document.getElementById('waterfall');
 			var flowItems = waterfall.querySelectorAll('.flow');
+
 			var cuttentFlow = {
 				parent : waterfallParent,//父容器
 				flowItems : flowItems,//子元素集合
