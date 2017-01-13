@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>点击-水波纹效果</title>
+	<style>
+		*{margin: 0;padding: 0;}
+		.btn{width: 150px;height: 40px;background: #008DC5;border:1px solid #d9d9d9;color: #fff;outline: none;}
+		.effect{position: relative;overflow:hidden;}
+		.ripple{border-radius: 50%;background: rgba(0,0,0,.2);transform: scale(0);position: absolute;opacity: 1;display: inline-block;}
+		.rippleEffect{animation: rippleEffect 2s cubic-bezier(0.23, 1, 0.32, 1);}
+
+		@keyframes rippleEffect{
+			100%{
+				transform:scale(2);
+				opacity:0;
+			}
+		}
+	</style>
+</head>
+<body>
+	<button class="btn effect">click me</button>
+		
+
+	<script>
+		function ripple(event,$this){
+			e = event || window.event;
+			var x = e.pageX || document.documentElement.scrollLeft + document.body.scrollLeft + e.clientX;//计算相对于页面左边的距离
+			var y = e.pageY || document.documentElement.scrollTop + document.body.scrollTop + e.clientY;// 计算相对于页面顶部的距离
+			var wx = $this.offsetWidth;// button 宽度  水波元素就用这个设置宽高
+    		x = x - $this.offsetLeft - wx / 2;// 水波元素的left值
+    		y = y - $this.offsetTop - wx / 2;// 水波元素的top值
+
+			//添加ripple元素
+			var ripple = document.createElement('span');
+			ripple.className = 'ripple';
+			var firstChild = $this.firstChild;
+			if(firstChild){
+				$this.insertBefore(ripple,firstChild);  //在当前节点的某个子节点之前再插入一个子节点
+			}else{
+				$this.appendChild(ripple);
+			}
+
+			ripple.style.cssText = 'width:'+wx+'px;height:'+wx+'px;top:'+y+'px;left:'+x+'px;display:inline-block';
+			ripple.className += ' rippleEffect'; //添加动画
+			
+			$this.addEventListener('animationend',function(){// 监听动画结束，移除水波元素
+				this.removeChild(ripple);
+			})
+
+		}
+
+		var btn = document.getElementsByTagName('button')[0];
+		btn.addEventListener('click',function(e){
+			ripple(e,this);
+		})
+
+	</script>
+</body>
+</html>
