@@ -15,3 +15,5 @@
 
 [移动端 重力感应效果](https://tinyzh.github.io/demo/zhong-li/)
 ![移动端 重力感应效果](http://o8kanx15h.bkt.clouddn.com/ssdfssssssdf.gif)
+
+[图片滤镜](https://tinyzh.github.io/demo/img-filter/)
