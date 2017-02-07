@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>demo</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+</head>
+<body>
+<img src="demo.jpg" width="30%" id="targ">
+
+	<script src="alloy_finger.js"></script>
+<script src="vconsole.min.js"></script>
+	<script>
+		var af = new AlloyFinger('#targ',{
+            tap : function(){
+                console.log(123);
+            },
+            pinch : function(evt){
+                console.log(evt.scale);
+            }
+        });
+
+
+	</script>
+</body>
+</html>
