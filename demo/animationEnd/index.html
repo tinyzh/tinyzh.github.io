@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>animation</title>
+	<style>
+		*{padding: 0;margin: 0;}
+		.ele{width: 20px;height: 20px;background: red;}
+		.active{animation: 1s change forwards;}
+		@keyframes change{
+			to{
+				width: 200px;
+				height: 200px;
+				background: #abcedf;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="ele"></div>
+	<div>
+		<button id="change">change</button>
+	</div>
+	<script src="jquery.min.js"></script>
+	<script>
+		$('#change').on('click',function(){
+			$('.ele').toggleClass('active');
+		});
+
+		var animation_end = detectAnimationEndEvents();
+		$('.ele').on(animation_end,function(){
+			console.log('end');
+		})
+
+		function detectAnimationEndEvents(){
+        var t;
+        var el = document.createElement('fakeelement');
+        var animEndEventNames = {
+            'WebkitAnimation' : 'webkitAnimationEnd',
+            'OAnimation' : 'oAnimationEnd',
+            'msAnimation' : 'MSAnimationEnd',
+            'animation' : 'animationend'
+        };
+        for(t in animEndEventNames){
+            if( el.style[t] !== undefined ){
+                return animEndEventNames[t];
+            }
+        }
+    }
+
+	</script>
+</body>
+</html>
