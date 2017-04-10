@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>123</title>
+	<style>
+		*{padding: 0;margin:0;}
+		.line{width: 200px;height: 2px;background: #ccc;position: fixed;left: 100px;top: 100px;}
+
+	</style>
+</head>
+<body>
+<div class="line"></div>
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+
+$(document).on('mousemove',function(e){
+	var x = e.pageX;
+	var y = e.pageY;
+	var origin = {x:200,y:100} // 当前元素的中心点
+
+	// 计算出当前鼠标相对于元素中心点的坐标
+	x = x - origin.x;
+	y = origin.y - y;
+
+	atan2(y,x);
+});
+	function atan2(y,x){
+		var degree = Math.atan2(y,x) / (Math.PI / 180);
+		degree = -degree; 
+		$('.line').css('transform','rotate('+degree+'deg)');
+	}		
+</script>		
+</body>
+</html>
