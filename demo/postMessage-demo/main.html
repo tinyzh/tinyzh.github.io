@@ -1,0 +1,26 @@
+<body style="border:5px solid #333;">
+
+  <h1>this is index</h1>
+  <button id="button">发送</button>
+  <h3 id="h3"></h3>
+
+  <iframe src="http://m.c-zaful.com/framepage.html" id='myframe'></iframe>
+
+</body>
+<script>
+	var iframe = document.getElementById('myframe');
+	var h3 = document.getElementById('h3');
+	var button = document.getElementById('button');
+	
+	button.addEventListener('click',function(){
+		iframe.contentWindow.postMessage('我是从main来的数据','*')
+	},false)
+	
+	
+	function receiveMessage(e){
+		h3.innerHTML = e.data;
+		console.log('receiveMessage',e);
+	}
+	
+	window.addEventListener("message", receiveMessage, false);
+</script>

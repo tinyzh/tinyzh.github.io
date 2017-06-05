@@ -1,0 +1,26 @@
+<body style="border:5px solid #333;">
+
+  <h1 id="framedom">this is iframePage</h1>
+  
+  <button id="button">发送数据给parent</button>
+
+</body>
+
+
+<script>
+	var dom = document.getElementById('framedom');
+	var button = document.getElementById('button');
+	
+	function receiveMessage(e){
+		dom.innerHTML = e.data;
+		console.log('receiveMessage',e)
+	}
+	
+	window.addEventListener('message',receiveMessage,false);
+	
+	button.addEventListener('click',function(){
+		parent.postMessage('我是从frame来的数据','*');
+	})
+	
+	
+</script>

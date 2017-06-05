@@ -135,10 +135,8 @@ var eleDrag = null; //当前被拖动的元素
 var endPosition = {left : '', top : ''};  // 放开元素时的鼠标坐标
 $dragItem.on('selectstart',function(){
     return false;
-});
-
-$dragItem.on('dragstart',function(ev){
-    // 拖拽开始
+}).on('dragstart',function(ev){
+    // 拖拽开始  jquery里面需要使用ev.originalEvent.dataTransfer  原生js使用ev.dataTransfer就行了
     ev.originalEvent.dataTransfer.effectAllowed = 'move';
     eleDrag = ev.target;
     return true;
@@ -151,9 +149,11 @@ $container.on('dragover',function(ev){
     ev.preventDefault();
     return true;
 }).on('dragenter',function(ev){
+    // 给目标元素设置边框效果，提示元素进入
     $(this).toggleClass('active');
     return true;
 }).on('drop',function(ev){
+    // 记录当前的坐标，为拖拽结束时，拉伸框定位用
     endPosition.left = ev.originalEvent.x;
     endPosition.top = ev.originalEvent.y;
     if(eleDrag){
@@ -162,7 +162,11 @@ $container.on('dragover',function(ev){
     $(this).toggleClass('active');
 });
 
+// 这里是把拖拽元素，加上一些编辑效果，然后加入到目标元素里面
 function setHtml(eleDrag){
+    // 这里用的是attr拿图片地址
+    // 其实也可以用  ev.originalEvent.dataTransfer.getData('url')  getData来拿拖拽元素的url
+    // https://developer.mozilla.org/zh-CN/docs/Web/API/DataTransfer/getData
     var src = $(eleDrag).attr('src');
     var $img = $('<img>');
     var $dragEle = $('<div>');
