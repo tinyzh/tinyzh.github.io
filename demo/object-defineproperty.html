@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	
+
+</head>
+<body>
+	<p>利用Object.defineProperty实现双向绑定</p>
+	<input type="text" id="input">
+	<p id="p"></p>
+	<script>
+		var obj = {};
+		var input = document.getElementById('input');
+		var p = document.getElementById('p');
+
+
+		Object.defineProperty(obj,"name",{
+			set : function(val){
+				input.value = val;
+				p.innerHTML = val
+
+			}
+		})
+
+		input.addEventListener('input',function(e){
+			obj.name = e.target.value;
+		})
+
+
+	</script>
+</body>
+</html>
