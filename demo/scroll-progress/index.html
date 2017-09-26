@@ -19,17 +19,18 @@
 <body>
 	<div class="progress"></div>
 <script>
-(function() {
-	var wh = window.innerHeight;
-	var h = document.body.getBoundingClientRect().height;
-	var dh = h - wh;
-	window.addEventListener('scroll', function() {
-		window.requestAnimationFrame(function() {
-			var percent = Math.max(0, Math.min(1, window.pageYOffset / dh));
-			document.querySelector(".progress").style.width = percent * 100 + '%';
+(function(){
+	var wh = window.innerHeight;//窗口高度
+	var h = document.body.getBoundingClientRect().height; //页面高度
+	var dh = h - wh;  // 可滚动高度
+
+	window.addEventListener('scroll',function(){
+		window.requestAnimationFrame(function(){
+			var percent = Math.max(0, Math.min(1,window.pageYOffset / dh));  // 计算滚动距离占可滚动高度百分比
+			document.querySelector('.progress').style.width = percent * 100 + '%';
 		})
-	}, false);
-})();
+	},false);
+})()
 </script>
 	
 </body>
