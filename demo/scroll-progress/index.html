@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		.progress{
+			position:fixed;
+		    top:0;
+		    left:0;
+		    height:3px;
+		    background-color:#ffaaaa;
+		}
+		body{
+			height:2000px;
+		}
+</style>
+</head>
+<body>
+	<div class="progress"></div>
+<script>
+(function() {
+	var wh = window.innerHeight;
+	var h = document.body.getBoundingClientRect().height;
+	var dh = h - wh;
+	window.addEventListener('scroll', function() {
+		window.requestAnimationFrame(function() {
+			var percent = Math.max(0, Math.min(1, window.pageYOffset / dh));
+			document.querySelector(".progress").style.width = percent * 100 + '%';
+		})
+	}, false);
+})();
+</script>
+	
+</body>
+</html>
