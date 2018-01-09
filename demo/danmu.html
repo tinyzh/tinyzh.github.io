@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>弹幕</title>
+    <style>
+        *{padding: 0;margin: 0;}
+        #stage{width: 500px;height: 500px;border: 1px solid #000;margin: 200px auto;}
+    </style>
+</head>
+<body>
+    <div id="stage"></div>
+
+
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>
+        // 准备舞台
+
+        // 弹幕总时间
+        var Time = 9000;
+        // 检测时间间隔（每一场的时间）
+        var CheckTime = 1000;
+        // 总场数
+        var PlayCount = Math.ceil(Time / CheckTime);
+
+        currentSession = 0;
+
+        setInterval(function(){
+            //第xx场开始表演
+            director.trigger(currentSession+'start');
+            //从头再来一遍
+            if (currentSession === PlayCount) {
+                currentSession = 0;
+            }else{
+                currentSession++;
+            }
+
+        },CheckTime);
+
+        // 构造函数，传递剧本片段
+        var Actor = function(play){
+            this.play = play;
+            this.appearance = this.makeUp();
+            this.appearance.hide().appendTo(stage);
+        }
+
+        // 化妆
+        Actor.prototype.makeUp = function(){
+            var appearance = $('<div style="min-width:400px;font-size:'+this.play.size+';color:'+this.play.color+'; ">'+this.play.text+'</div>')
+            return appearance;
+        }
+
+        // 演员上场
+        Actor.prototype.animate = function(){
+            var that = this;
+            var appearance = that.appearance;
+            var mywidth = appearance.width()
+
+            appearance.animate({
+                left:-mywidth
+            },that.play.duration,'swing',function(){
+                appearance.hide()
+            })
+        }
+
+        // 开始表演
+        Actor.prototype.perform = function(){
+            var that = this;
+            var appearance = that.appearance;
+
+            appearance.css({
+                position:'absolute',
+                left: stage.width()+'px',
+                top:that.play.top||0,
+                zIndex:10,
+                display:'block'
+            });
+
+            var delayTime = that.play.time - (that.play.session-1) * CheckTime;
+            //演员需要修正自己上场的时间
+            setTimeout(function(){
+                that.animate();
+            },delayTime)
+
+        }
+
+        //这样我们就得到了一个支持事件机制的对象。
+        var director = $({});
+
+        var stage = $('#stage');
+        stage.css({
+            position:'relative',
+            overflow:'hidden'
+        })
+
+        var playList = [{
+            //从何时开始
+            time:0,
+            //经过的时间
+            duration:4292,
+            //舞台偏移的高度
+            top:10,
+            //弹幕文字大小
+            size:16,
+            //弹幕颜色
+            color:'#000',
+            //内容
+            text:'前方高能注意'
+        },{
+            //从何时开始
+            time:100,
+            //经过的时间
+            duration:4192,
+            //舞台偏移的高度
+            top:100,
+            //弹幕文字大小
+            size:14,
+            //弹幕颜色
+            color:'#333',
+            //内容
+            text:'我就是路过看看。。'
+        },{
+            //从何时开始
+            time:170,
+            //经过的时间
+            duration:6192,
+            //舞台偏移的高度
+            top:130,
+            //弹幕文字大小
+            size:16,
+            //弹幕颜色
+            color:'#00ff00',
+            //内容
+            text:'我就静静的看着你装逼。。'
+        },{
+            //从何时开始
+            time:1000,
+            //经过的时间
+            duration:5992,
+            //舞台偏移的高度
+            top:150,
+            //弹幕文字大小
+            size:20,
+            //弹幕颜色
+            color:'#ff0000',
+            //内容
+            text:'我和我的小伙伴都惊呆了～～'
+        }]
+
+        $.each(playList,function(k,play){
+            //确定演员，确定场次
+            var session = Math.ceil(play.time / CheckTime);
+            play.session = session;
+            //剧本拿给演员,召唤一个演员
+            var actor = new Actor(play);
+            //演员针对导演添加监听。
+            //等导演说了这个场次后，就开始叫演员表演
+            director.on(session+'start',function(){
+                actor.perform();
+            })
+        })
+
+    </script>
+</body>
+</html>
