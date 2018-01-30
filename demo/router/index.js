@@ -9,3 +9,7 @@ app.set('/1', function () {
 app.set('/2', function () {
     $('#app').html('2')
 })
+
+app.set('/hello', function () {
+    $('#app').html('hello')
+})
