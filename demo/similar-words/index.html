@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<h1>相似词推荐</h1>
+	<p>
+		已知单词:cherry, pineapple, melon, strawberry, raspberry, java, javascript, php, ruby, python
+	</p>
+	<p>
+		<form action="javascript:;">
+			搜索：<input type="text" id="input">
+		<button id="btn" type="submit">查找</button>
+		</form>
+		
+
+	</p>
+	<p>
+		结果: <span id="res"></span>
+	</p>
+
+	<script>
+		function Dictionary(words) {
+		  this.words = words;
+		}
+
+		Dictionary.prototype.findMostSimilar = function(term) { 
+		  let levenshtein = function(word) { 
+		    if (word === term) {return 0} // 相等，位置不变
+		    if (term.length === 0) {return word.length} // 比较的单词为空，取最大差异数
+		    if (word.length === 0) {return term.length}
+		    let v0 = new Array(term.length + 1); // 查找单词的长度
+
+		    let v1 = new Array(term.length + 1);
+		    for (let i=0; i<v0.length; i++) { v0[i] = i; } // 填充
+			
+			
+		    for (let i=0; i<word.length; i++) { // 数组中的单个元素和输入字符开始对比
+		      v1[0] = i+1;  
+		      for (let j=0; j<term.length; j++) {
+		      	// word的第一个字母和term的每个字母比较 相同返回0 不同返回1
+		        let cost = word.charAt(i) === term.charAt(j) ? 0 : 1; 
+		        v1[j+1] = Math.min(v1[j]+1, v0[j+1]+1, v0[j]+cost);
+		      }
+		      // 
+		      let tmp = v0;
+		      v0 = v1;
+		      v1 = tmp;
+
+		    }
+		    console.log(v0,term.length)
+		    return v0[term.length]; // 差异度 越小，数字越小  返回v0的最后一位
+		  }
+		  
+		  return this.words.sort((a,b) => levenshtein(a)-levenshtein(b))[0];
+		}
+
+		let fruits = new Dictionary(['cherry', 'pineapple', 'melon', 'strawberry', 'raspberry']);
+    	console.log(fruits.findMostSimilar('melln'));
+    	
+		
+		let btn = document.getElementById('btn');
+		let input = document.getElementById('input');
+		let res = document.getElementById('res');
+
+		btn.addEventListener('click',function(){
+			let fruits = new Dictionary(['cherry', 'pineapple', 'melon', 'strawberry', 'raspberry','java','javascript','python','ruby','php']);
+			res.innerHTML = fruits.findMostSimilar(input.value);
+		})
+
+	</script>
+</body>
+</html>
