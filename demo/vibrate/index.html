@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <title>震动</title>
+</head>
+<body>
+    <button id="vibrate">震动</button>
+<button id="sos">SOS</button>
+    <script>
+        let vibrate = document.getElementById('vibrate');
+        let sos = document.getElementById('sos');
+        vibrate.addEventListener('click',function(){
+            window.navigator.vibrate(200);
+        })
+        sos.addEventListener('click',function(){
+            window.navigator.vibrate([100,30,100,30,100,200,200,30,200,30,200,200,100,30,100,30,100]);
+        })
+    </script>
+</body>
+</html>
