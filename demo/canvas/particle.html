@@ -15,8 +15,22 @@
 </canvas>
 <div>默认粒子数:<span id="particle">20</span></div>
 <button id="add">增加粒子50</button>
-
+<script src="stats.min.js"></script>
 <script>
+    // fps 工具
+    var stats = new Stats();
+    stats.showPanel(0);
+    document.body.appendChild( stats.dom );
+    function animate() {
+        stats.begin();
+        stats.end();
+        requestAnimationFrame( animate );
+    }
+    requestAnimationFrame( animate );
+
+
+
+
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext('2d');
     var addBtn = document.getElementById('add');
@@ -101,16 +115,16 @@
 //            this.vy += settings.gravity;
 
         // 记录粒子的状态
-        this.life++;
+//        this.life++;
 
         // 如果粒子过期，就删除
         if(this.life >= settings.maxLife){
-//                delete particles[this.id];
+                delete particles[this.id];
         }
 
         context.clearRect(undefined, undefined,canvas.width, canvas.height);
         context.beginPath();
-        context.fillStyle = '#fff'; // 粒子颜色
+        context.fillStyle = '#ccc'; // 粒子颜色
         context.arc(this.x,this.y,settings.particleSize,0,Math.PI*2,true);
         context.closePath();
         context.fill();
