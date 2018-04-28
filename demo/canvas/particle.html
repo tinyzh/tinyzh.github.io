@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>粒子效果</title>
+</head>
+<body>
+<canvas id="canvas" width="100%" height="600">
+    您的浏览器不支持，请选择现代浏览器浏览
+</canvas>
+<div>默认粒子数:<span id="particle">20</span></div>
+<button id="add">增加粒子50</button>
+
+<script>
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    var addBtn = document.getElementById('add');
+    var particleNum = document.getElementById('particle');
+
+    addBtn.addEventListener('click',function(){
+        settings.density += 50;
+//            particles = {};
+        particleIndex = 0;
+        particle.innerHTML = settings.density;
+        start();
+    },false);
+
+
+    var particles = {}, // 保存所有粒子
+            particleIndex = 0,
+            settings = {
+                density: 20,
+                particleSize: 2,
+                startingX: canvas.width / 2,
+                startingY: canvas.height / 4,
+                gravity: 0.97,
+                maxLife: 100,
+                groundLevel: canvas.height * 0.95,
+                leftWall: canvas.width * 0.1,
+                rightWall: canvas.width * 0.98,
+                particleSpace: 100,
+                requestAnimationId:0
+            };
+
+    function Particle(){
+        // 随机初始位置
+        this.x = this.randomLocation(settings.leftWall,settings.rightWall);
+        this.y = this.randomLocation(settings.particleSize,settings.groundLevel);
+
+        // 默认初始位置
+//            this.x = settings.startingX;
+//            this.y = settings.startingY;
+
+        // 随机速度
+        this.vx = this.randomLocation(1,3);
+        this.vy = this.randomLocation(3,5);
+
+        // 添加新粒子
+        particleIndex++;
+        particles[particleIndex] = this;
+        this.id = particleIndex;
+        this.life = 0;
+    };
+
+    Particle.prototype.randomLocation = function(min,max){  // 生成随机数
+        return Math.floor(Math.random() * max) + min;
+    }
+
+    Particle.prototype.draw = function(){
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // 触地反弹
+        if((this.y + settings.particleSize) > settings.groundLevel){
+            this.vy *= -1;
+//                this.vx *= -1;
+            this.y = settings.groundLevel - settings.particleSize;
+        }
+        if(this.y - settings.particleSize <= 0){ // 触顶反弹
+            this.vy *= -1;
+//                this.vx *= -1;
+            this.y += settings.particleSize;
+        }
+
+        // 触墙反弹
+        if(this.x - (settings.particleSize) <= settings.leftWall){ // 左墙
+            this.vx *= -1;
+            this.x = settings.leftWall + settings.particleSize
+        }
+        if(this.x + settings.particleSize >= settings.rightWall){ // 右墙
+            this.vx *= -1;
+            this.x = settings.rightWall - settings.particleSize
+        }
+
+        // 调整重力
+//            this.vy += settings.gravity;
+
+        // 记录粒子的状态
+        this.life++;
+
+        // 如果粒子过期，就删除
+        if(this.life >= settings.maxLife){
+//                delete particles[this.id];
+        }
+
+        context.clearRect(undefined, undefined,canvas.width, canvas.height);
+        context.beginPath();
+        context.fillStyle = '#fff'; // 粒子颜色
+        context.arc(this.x,this.y,settings.particleSize,0,Math.PI*2,true);
+        context.closePath();
+        context.fill();
+
+    }
+
+
+
+
+
+
+    function particleSpaceCheck(d1,d2){
+        var xRange = d1.x - d2.x;
+        var yRange = d1.y - d2.y;
+        return xRange*xRange + yRange*yRange <= Math.pow(settings.particleSpace,2)
+    }
+
+    function lineTo(d1,d2){
+        var opacity = 1 - Math.sqrt(Math.pow(d1.x - d2.x,2)+Math.pow(d1.y - d2.y,2)) / settings.particleSpace; // 根据距离调整线的透明度
+        context.strokeStyle = `rgba(255,255,255,${opacity})`;
+        context.beginPath();
+        context.moveTo(d1.x,d1.y);
+        context.lineTo(d2.x,d2.y);
+        context.stroke();
+    }
+
+    function generalParticle(){
+        context.fillStyle = "#000"; // canvas背景颜色
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        // 绘制墙
+        context.fillStyle = "white";
+        context.fillRect(0, 0, settings.leftWall, canvas.height);
+        context.fillRect(settings.rightWall, 0, canvas.width, canvas.height);
+        context.fillRect(0, settings.groundLevel, canvas.width, canvas.height);
+
+
+        for(var i = 1; i <= Object.keys(particles).length; i++){
+            var d1 = particles[i];
+            d1.draw();
+            for(var j = i + 1; j <= Object.keys(particles).length; j++){
+                var d2 = particles[j];
+                if(particleSpaceCheck(d1,d2)){
+                    lineTo(d1,d2);
+                }
+            }
+        }
+        settings.requestAnimationId = window.requestAnimationFrame(generalParticle);
+    }
+
+    // 普通方式调用
+    //        setInterval(function(){
+    //            generalParticle();
+    //        },30)
+
+    // requestAnimationFrame 调用
+    function start(){
+        window.cancelAnimationFrame(settings.requestAnimationId);
+        context.clearRect(0, 0,canvas.width, canvas.height);
+        for(var i = 0; i < settings.density; i++){
+            new Particle()
+        }
+        generalParticle();
+    }
+    start();
+
+
+</script>
+</body>
+</html>
