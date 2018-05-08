@@ -76,6 +76,7 @@
         draw();
 
         document.addEventListener('touchstart',function(e){
+            e.preventDefault();
             context.beginPath();
             context.lineWidth = 20;
             context.lineCap = 'round'; // 线段圆头
@@ -86,12 +87,14 @@
         },false);
 
         document.addEventListener('touchmove',function(e){
+            e.preventDefault();
             var touch = e.touches[0];
             context.lineTo(touch.pageX - oLeft,touch.pageY - oTop);
             context.stroke();
         });
 
-        document.addEventListener('touchend',function(){
+        document.addEventListener('touchend',function(e){
+            e.preventDefault();
             var imageData = context.getImageData(0,0,canvas.width,canvas.height);
             var allPx = imageData.width * imageData.height;
             var visibleNum = 0; // 刮开的像素点个数
