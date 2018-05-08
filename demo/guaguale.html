@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>刮刮乐</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #main{
+            width: 100%;
+            padding: 20px 0;
+            background-color: #abcdef;
+        }
+        .tc{text-align: center;}
+        #prize{font-size: 24px;font-family: Arial;color: lightseagreen;text-shadow: 5px 5px 5px #abcdef;}
+
+        .canvasBox{
+            width: 78%;
+            height: 160px;
+            border-radius: 10px;
+            background-color: #FFF;
+            margin-left: 11%;
+            line-height: 160px;
+            text-align: center;
+            position: relative;
+        }
+
+        #canvas{
+            width: 96%;
+            height: 96%;
+            position: absolute;
+            left: 2%;
+            top: 2%;
+            background-color: transparent;
+        }
+
+        .disappear{
+            animation: disa 0.5s 1 forwards;
+        }
+
+        @keyframes disa{
+            0%{opacity:1;}
+            100%{opacity: 0;}
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <p class="tc">刮刮乐</p>
+        <div class="canvasBox">
+            <span id="prize">
+                老哥，你这是喜脉啊！
+            </span>
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+
+        var arr = getOffset(canvas);
+        var oLeft = arr[0];
+        var oTop = arr[1];
+
+
+        function draw(){
+            context.beginPath();
+            context.fillStyle = '#ccc';
+            context.fillRect(0,0,canvas.width,canvas.height);
+            context.closePath();
+        }
+        draw();
+
+        document.addEventListener('touchstart',function(e){
+            context.beginPath();
+            context.lineWidth = 20;
+            context.lineCap = 'round'; // 线段圆头
+            // 图层组合区域透明
+            context.globalCompositeOperation = 'destination-out';
+            var touch = e.touches[0];
+            context.moveTo(touch.pageX-oLeft,touch.pageY-oTop);
+        },false);
+
+        document.addEventListener('touchmove',function(e){
+            var touch = e.touches[0];
+            context.lineTo(touch.pageX - oLeft,touch.pageY - oTop);
+            context.stroke();
+        });
+
+        document.addEventListener('touchend',function(){
+            var imageData = context.getImageData(0,0,canvas.width,canvas.height);
+            var allPx = imageData.width * imageData.height;
+            var visibleNum = 0; // 刮开的像素点个数
+
+            for(var i = 0; i < allPx; i++){
+                if(imageData.data[i*4 + 3] == 0){  // imageData.data 里面是Uint8ClampedArray类型的一维数组 第四个数表示透明度 当这个值为0时 表示这个像素点变为透明了
+                    visibleNum++;
+                }
+            }
+            if(visibleNum >= allPx*3/4){ // 大于3/4 图层隐藏
+                canvas.setAttribute('class','disappear');
+            }
+        });
+
+        // 获取canvas的位置
+        function getOffset(obj){
+            var left = 0,top = 0;
+            function get(obj){
+                left += obj.offsetLeft;
+                top += obj.offsetTop;
+
+                if(obj.offsetParent.tagName !== 'BODY'){
+                    get(obj.offsetParent)
+                }
+                return [left,top];
+            }
+            return get(obj);
+        }
+
+
+    </script>
+
+
+</body>
+</html>
