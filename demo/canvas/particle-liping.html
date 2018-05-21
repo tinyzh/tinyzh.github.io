@@ -44,6 +44,10 @@
         start();
     },false);
 
+    canvas.addEventListener('click',function(e){
+        console.log(e.clientX,e.clientY);
+    },false)
+
 
     var particles = {}, // 保存所有粒子
             particleIndex = 0,
@@ -74,12 +78,29 @@
         this.vx = this.randomLocation(1,3);
         this.vy = this.randomLocation(3,5);
 
+        var cacheCanvas = document.createElement('canvas');
+        cacheCanvas.width = settings.particleSize * 2;
+        cacheCanvas.height = settings.particleSize * 2;
+        this.canva = cacheCanvas;
+        this.ctx = cacheCanvas.getContext('2d');
+        this.ctx.fillStyle = '#000';
+
+        this.cache();
+
         // 添加新粒子
         particleIndex++;
         particles[particleIndex] = this;
         this.id = particleIndex;
         this.life = 0;
     };
+
+    Particle.prototype.cache = function(){
+        this.ctx.beginPath();
+        this.ctx.fillStyle = `rgba(${this.randomLocation(0,255)},${this.randomLocation(0,255)},${this.randomLocation(0,255)},1)`; // 粒子颜色
+        this.ctx.arc(this.x,this.y,settings.particleSize,0,Math.PI*2,true);
+        this.ctx.closePath();
+        this.ctx.fill();
+    }
 
     Particle.prototype.randomLocation = function(min,max){  // 生成随机数
         return Math.floor(Math.random() * max) + min;
@@ -123,11 +144,11 @@
         }
 
 //        context.clearRect(undefined, undefined,canvas.width, canvas.height);
-        context.beginPath();
-        context.fillStyle = `rgba(${this.randomLocation(0,255)},${this.randomLocation(0,255)},${this.randomLocation(0,255)},1)`; // 粒子颜色
-        context.arc(this.x,this.y,settings.particleSize,0,Math.PI*2,true);
-        context.closePath();
-        context.fill();
+        context.save();
+        context.translate(this.x,this.y);
+        context.drawImage(this.canva,settings.particleSize,settings.particleSize);
+        context.restore();
+
 
     }
 
