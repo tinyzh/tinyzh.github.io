@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div>
+    <p>Times:500ms</p>
+    <p>
+        开始时间(s):<span id="startTime"></span> ---- 结束时间(s):<span id="endTime"></span>
+    </p>
+    <p id="nums"></p>
+    <button id="btn">开始</button>
+</div>
+<script src="worker-timer.js"></script>
+
+
+<script>
+    var nums = document.getElementById('nums');
+    var btn = document.getElementById('btn');
+    var startTime = document.getElementById('startTime');
+    var endTime = document.getElementById('endTime');
+    var number = 1;
+    var intervalId = null;
+
+    btn.addEventListener('click',function(e){
+        if(e.target.innerHTML == '开始'){
+            startTime.innerHTML = new Date().getSeconds();
+            intervalId = workerTimer.setInterval(function(){
+                nums.innerHTML = ++number;
+            },500);
+            e.target.innerHTML = '暂停';
+        }else{
+            endTime.innerHTML = new Date().getSeconds();
+            workerTimer.clearInterval(intervalId);
+            e.target.innerHTML = '开始'
+        }
+
+    },false);
+
+</script>
+</body>
+</html>
