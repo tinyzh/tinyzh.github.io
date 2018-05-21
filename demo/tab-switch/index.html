@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>监听页面切换</title>
+</head>
+<body>
+    <script>
+
+        document.addEventListener('visibilitychange',function(e){
+            var ele = document.createElement('p');
+
+            if(document.visibilityState === 'visible'){
+                ele.innerHTML = '回来了';
+                document.body.appendChild(ele);
+            }else{
+                ele.innerHTML = '又跑了';
+                document.body.appendChild(ele);
+            }
+        },false);
+    </script>
+</body>
+</html>
