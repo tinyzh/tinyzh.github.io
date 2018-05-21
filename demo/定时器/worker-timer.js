@@ -11,6 +11,7 @@ var workerTimer = {
         return id;
     },
 
+    // 监听worker 里面的定时器发送的message 然后执行回调函数
     onMessage: function(e) {
         switch (e.data.message) {
             case 'interval:tick':
@@ -23,6 +24,7 @@ var workerTimer = {
         }
     },
 
+    // 往worker里面发送销毁指令
     clearInterval: function(id) {
         worker.postMessage({ command: 'interval:clear', id: id });
     }
