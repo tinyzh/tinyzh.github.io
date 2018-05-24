@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>坐标旋转</title>
+</head>
+<body>
+<canvas id="canvas" width="400" height="300" style="background:#333"></canvas>
+<script>
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    var centerX = Math.floor(canvas.width / 2);
+    var centerY = Math.floor(canvas.height / 2);
+
+    var balls = [];
+    var angle = 0;
+    var vr = 0.02;
+    var radius = 0;
+
+    function Ball(x,y,radius,speed){
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.angle = 0;
+        this.speed = speed;
+    }
+
+    function animation(){
+//        context.clearRect(0,0,canvas.width,canvas.height);
+        context.fillStyle = 'rgba(0,0,0,0.1)';
+        context.fillRect(0,0,canvas.width,canvas.height);
+        context.fillStyle = '#fff';
+        balls.forEach(function(ball,i){
+            ball.x = centerX + Math.cos(angle) * radius;
+            ball.y = centerY + Math.sin(angle) * radius;
+            angle += vr;
+            context.beginPath();
+            context.arc(ball.x, ball.y, ball.radius, 0, 2*Math.PI, true);
+            context.fill();
+
+
+        });
+
+        context.beginPath();
+        context.strokeStyle = '#fff';
+        context.moveTo(centerX,centerY);
+        context.lineTo(balls[0].x,balls[0].y);
+        context.stroke();
+//        context.arc(centerX,centerY,radius, 0, 2*Math.PI, true);
+        context.beginPath();
+        context.arc(centerX,centerY,2,0,2*Math.PI,true);
+        context.fill();
+        requestAnimationFrame(animation);
+    }
+
+    window.onload = function(){
+        balls.push(new Ball(90,90, 10));
+        var x = balls[0].x - centerX;
+        var y = balls[0].x - centerY;
+        radius = Math.floor(Math.sqrt(x*x + y*y));
+        animation();
+    }
+
+
+
+
+
+</script>
+</body>
+</html>
