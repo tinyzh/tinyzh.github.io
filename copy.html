@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>拦截页面复制操作</title>
+</head>
+<body>
+	<button id="copy">点击复制</button>
+	<input type="input" id="input" style="position:absolute;left:-1000px;top:0;">
+	<div>something dididi</div>
+	
+	<script>
+		function copyText(){
+			let text = document.getElementById('copy').innerText; // 复制的文本
+			var input = document.getElementById('input');
+			input.value = text;
+			input.select() // 选中文本
+			document.execCommand('copy') // 执行浏览器复制命令
+			alert('复制成功')
+		}
+
+		document.getElementById('copy').addEventListener('click',function(){
+			copyText()
+		})
+
+
+
+		 document.body.oncopy = event => {
+		 	event.preventDefault();
+		 	let textFont, copyFont = window.getSelection(0).toString(); // 被复制的文字，等下插入
+
+		 	if(copyFont.length > 10){ // 超过一定长度，添加版权信息
+				textFont = copyFont + '\n'
+						+ '作者：sss\n'
+						+ '连接： sss\n'
+						+ '来源: xxx\n'
+						+ '著作权归作者所有，商业转载请联系作者获得授权，非商业转载请注明出处。'
+		 	}else{
+		 		textFont = copyFont
+		 	}
+
+		 	if(event.clipboardData){
+		 		return event.clipboardData.setData('text', textFont); // 将信息写入粘贴板
+		 	}else{
+		 		// 兼容IE
+		 		return window.clipboardData.setData('text', textFont)
+		 	}
+		 }
+
+
+	</script>
+</body>
+</html>
