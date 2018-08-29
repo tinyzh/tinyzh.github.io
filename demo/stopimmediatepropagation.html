@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <p id="item">123</p>
+
+    <script>
+    let item = document.getElementById("item");
+
+    item.addEventListener('click',function(e){
+        // stopImmediatePropagation 不仅可以阻止事件冒泡  还能阻止绑定在当前元素上的其他事件执行
+        e.stopImmediatePropagation()
+        
+        console.log('a')
+    })
+
+    item.addEventListener('click',function(e){
+        console.log('b')
+    })
+    
+    </script>
+</body>
+</html>
