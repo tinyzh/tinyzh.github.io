@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 300px;
+            height: 400px;
+            border: 1px solid #000;
+            overflow: auto;
+        }
+
+        .shape {
+            float: left;
+            width: 30px;
+            height: 400px;
+            shape-outside: polygon(0 0, 0 150px, 16px 154px, 30px 166px, 30px 314px, 16px 326px, 0 330px, 0 0);
+            transition: shape-outside .15s;
+        }
+
+        .liuhai {
+            width: 24px;
+            height: 180px;
+            background: url(https://www.zhangxinxu.com/study/201709/liu.png) no-repeat left center;
+            position: absolute;
+            margin-top: 150px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            border-bottom: 1px solid #eee;
+            padding: .5em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box" id="box">
+        <i class="shape" id="shape"></i>
+        <i class="liuhai"></i>
+        <div>
+            <ul>
+                <li>1</li>
+                <li>1</li>
+                <li>1</li>
+                <li>5</li>
+                <li>1</li>
+                <li>7</li>
+                <li>8</li>
+                <li>9</li>
+                <li>1</li>
+                <li>1</li>
+                <li>1</li>
+                <li>1</li>
+                <li>1</li>
+                <li>1</li>
+                <li>1</li>
+
+
+            </ul>
+        </div>
+    </div>
+
+
+    <script>
+        let box = document.getElementById('box')
+        let shape = document.getElementById('shape')
+
+        shape.style.height = box.scrollHeight + 'px'
+
+        function funShape(e) {
+            let scrollTop = box.scrollTop;
+            var shapeOutside = 'polygon(0 0, 0 ' + (150 + scrollTop) + 'px, 16px ' + (154 + scrollTop) + 'px, 30px ' +
+                (166 + scrollTop) + 'px, 30px ' + (314 + scrollTop) + 'px, 16px ' + (326 + scrollTop) + 'px, 0 ' + (330 +
+                    scrollTop) + 'px, 0 0)';
+            shape.style.shapeOutside = shapeOutside
+
+        }
+
+
+        // 滚动时候实时改变shape形状
+        box.addEventListener('scroll', funShape);
+        funShape();
+    </script>
+</body>
+
+</html>
