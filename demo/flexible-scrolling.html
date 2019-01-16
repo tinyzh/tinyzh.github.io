@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        /* 样式初始化 */
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+
+        }
+
+        aside {
+            height: 100%;
+            width: 100%;
+        }
+
+        /* 列表的父盒子，限制宽高 */
+        /* 注意设置overflow: hidden;样式后，超出这个盒子的ul将不会显示 */
+        .draw {
+            width: 60px;
+            height: 500px;
+            border: 2px solid #ccc;
+            overflow: hidden;
+            position: fixed;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* li 设置了浮动， 所以 ul 要清除浮动 */
+        ul:after {
+            content: "";
+            display: block;
+            visibility: hidden;
+            height: 0;
+            clear: both;
+        }
+
+        ul {
+            zoom: 1;
+        }
+
+        li {
+            list-style: none;
+            float: left;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="main">
+        <div class="draw" id="draw">
+            <ul>
+                <li style="background:orange">列表一</li>
+                <li style="background:yellowgreen">列表二</li>
+                <li style="background:yellow">列表三</li>
+                <li style="background:cyan">列表四</li>
+                <li style="background:orangered">列表五</li>
+                <li style="background:pink">列表六</li>
+                <li style="background:red">列表七</li>
+                <li style="background:purple">列表八</li>
+                <li style="background:violet">列表九</li>
+                <li style="background:brown">列表十</li>
+            </ul>
+        </div>
+    </aside>
+
+    <script>
+        var draw = document.querySelector('#draw');
+        var ul = draw.children[0];
+        var maxDown = 50; // 设定一个最大向下滑动的距离
+        // 求得一个最大向上滑动的距离
+        var maxUp = -(ul.offsetHeight - draw.offsetHeight + maxDown);
+        // 向上反弹
+        var maxUpBounce = 0;
+        // 向下反弹值
+        var maxDownBounce = -(ul.offsetHeight - draw.offsetHeight);
+
+        var startY = 0 // 刚触碰到屏幕的时的手指信息
+        var centerY = 0 // 用来记录每次触摸时上一次的偏移距离
+
+        // touchstart 时，记录手指在 Y 轴上的落点距离可视顶部距离
+        ul.addEventListener('touchstart', function (e) {
+            startY = e.changedTouches[0].clientY;
+        })
+
+        // touchmove 时，记录此时手指在 Y 轴上的落点距离可视顶部距离
+        ul.addEventListener('touchmove', function (e) {
+            // 获取差值
+            var dy = e.changedTouches[0].clientY - startY;
+
+            // 上次的滑动距离加上本次的滑动距离
+            var tempY = centerY + dy;
+
+            // 当上次滑动的距离加上本次滑动的距离 大于 设定的最大向下距离的时候
+            if (tempY > maxDown) {
+                tempY = maxDown;
+            }
+            // 当上次滑动的距离加上本次滑动的距离 小于 设定的最大向上距离的时候 
+            else if (tempY < maxUp) {
+                // 直接让偏移的值 等于这个设定值
+                tempY = maxUp;
+            }
+
+            // 设置 ul 在 Y 轴上的偏移
+            ul.style.transform = 'translateY(' + tempY + 'px)';
+        })
+
+        // touchend 时，记录此时手指在 Y 轴上的落点距离可视顶部距离
+        ul.addEventListener('touchend', function (e) {
+            // 获取差值
+            var dy = e.changedTouches[0].clientY - startY;
+            // 记录移动的距离
+            centerY = centerY + dy;
+
+            // 两次滑动的距离 大于 设定的 向上 反弹值时
+            if (centerY > maxUpBounce) {
+                // 让两次滑动的距离 等于 设置的值
+                centerY = maxUpBounce;
+                // 添加过渡
+                ul.style.transition = 'transform .5s';
+                ul.style.transform = 'translateY(' + centerY + 'px)';
+            }
+            // 两次滑动的距离 小于 设定的 向下 反弹值时
+            else if (centerY < maxDownBounce) {
+                // 让两次滑动的距离 等于 设置的值
+                centerY = maxDownBounce;
+                // 添加过渡
+                ul.style.transition = 'transform .5s';
+                ul.style.transform = 'translateY(' + centerY + 'px)';
+            }
+        })
+    </script>
+</body>
+
+</html>
