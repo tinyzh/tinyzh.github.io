@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        const callback = (res) => {
+            console.log('run callback',res)
+        }
+
+        let max = 5
+
+        const urls = Array.from({ length: 10 }, (v, k) => k);
+
+        const fetch = function (idx) {
+            return new Promise(resolve => {
+                console.log(`start request ${idx}`);
+                // 模拟请求时间
+                const timeout = parseInt(Math.random() * 1e4);
+                setTimeout(() => {
+                    console.log(`end request ${idx}`);
+                    resolve(idx)
+                }, timeout)
+            })
+        };
+
+
+        function handleFetchQueue(urls, max, callback) {
+            const urlCount = urls.length
+            const requestsQueue = []
+            const results = []
+            let i = 0
+            const handleRequest = (url) => {
+                const req = fetch(url).then(res => {
+                    const len = results.push(res)
+                    if (len < urlCount && i + 1 < urlCount) {
+                        requestsQueue.shift()
+                        handleRequest(urls[++i])
+                    } else if (len === urlCount) {
+                        'function' === typeof callback && callback(results)
+                    }
+                }).catch(e => {
+                    results.push(e)
+                })
+                if (requestsQueue.push(req) < max) {
+                    handleRequest(urls[++i])
+                }
+            }
+            handleRequest(urls[i])
+        }
+
+        // handleFetchQueue(urls, max, callback);
+
+        const sendRequest = (urls, max, callback) => {
+            let finished = 0
+            let total = urls.length
+            const handle = () => {
+                if(urls.length){
+                    let url = urls.shift()
+                    fetch(url).then(res => {
+                        finished++
+                        handle()
+                    }).catch(e => {
+                        throw Error(e)
+                    })
+                }
+                if(finished >= total){
+                    callback()
+                }
+            }
+            for(let i = 0; i < max; i++){
+                handle()
+            }
+        }
+
+        sendRequest(urls, max, callback)
+    </script>
+
+</body>
+
+</html>
